@@ -13,17 +13,29 @@ COPY . .
 
 COPY --from=composer:2.3.5 /usr/bin/composer /usr/bin/composer
 
+RUN composer install --no-progress --no-interaction
+RUN composer update --no-scripts
+
+
+
 ENV PORT=8000
-ENTRYPOINT [ "docker/entrypoint.sh" ]
+
+
+RUN php artisan key:generate 
+RUN php artisan cache:clear 
+RUN php artisan config:clear 
+RUN php artisan route:clear 
+
+CMD [ "php","artisan", "serve", "--host=0.0.0.0", "--port=8000" ]
 
 # ==============================================================================
 #  node
-FROM node:14-alpine as node
+# FROM node:14-alpine as node
 
-WORKDIR /var/www
-COPY . .
+# WORKDIR /var/www
+# COPY . .
 
-RUN npm install --global cross-env
-RUN npm install
+# RUN npm install --global cross-env
+# RUN npm install
 
-VOLUME /var/www/node_modules
+# VOLUME /var/www/node_modules

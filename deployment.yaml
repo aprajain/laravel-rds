@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket-server
+  template:
+    metadata:
+      labels:
+        app: websocket-server
+    spec:
+      containers:
+        - name: websocket-server
+          image: aprajain/chatapp:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: database-docker.cauftcxf70xm.us-east-1.rds.amazonaws.com
+            - name: DB_PORT
+              value: "3306" # or the port for your RDS database
+            - name: DB_DATABASE
+              value: database-docker
+            - name: DB_USERNAME
+              value: admin
+            - name: DB_PASSWORD
+              value: rootuser
+
